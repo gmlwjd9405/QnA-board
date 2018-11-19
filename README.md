@@ -1,1 +1,1 @@
-# QnA-board
+# QnA Board
