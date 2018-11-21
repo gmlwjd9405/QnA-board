@@ -32,11 +32,19 @@ public class UserController {
         return "/user/list";
     }
 
-    @GetMapping("{id}/form")
+    @GetMapping("/{id}/form")
     public String updateForm(@PathVariable Long id, Model model) {
         User user = userRepository.findById(id).orElse(null);
         model.addAttribute(user);
 //        model.addAttribute("user", userRepository.findOne(id));
         return "/user/updateForm";
+    }
+
+    @PostMapping("/{id}")
+    public String update(@PathVariable Long id, User newUser) {
+        User user = userRepository.findById(id).orElse(null);
+        user.update(newUser);
+        userRepository.save(user);
+        return "redirect:/users";
     }
 }
