@@ -40,7 +40,7 @@ public class UserController {
         return "/user/updateForm";
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public String update(@PathVariable Long id, User newUser) {
         User user = userRepository.findById(id).orElse(null);
         user.update(newUser);
