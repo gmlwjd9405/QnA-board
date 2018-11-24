@@ -5,7 +5,6 @@ import com.hee.domain.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -35,14 +34,14 @@ public class UserController {
             return "redirect:/users/loginForm";
         }
         System.out.println("Login Success");
-        session.setAttribute("user", user);
+        session.setAttribute("sessionedUser", user);
 
         return "redirect:/";
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.removeAttribute("user");
+        session.removeAttribute("sessionedUser");
 
         return "redirect:/";
     }
@@ -66,9 +65,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}/form")
-    public String updateForm(@PathVariable Long id, Model model) {
+    public String updateForm(@PathVariable Long id, Model model, HttpSession session) {
+        Object sessionedUser = session.getAttribute("sessionedUser");
+        if (sessionedUser == null) { // 로그인되어 있지 않음
+            return "redirect:/users/loginForm";
+        }
         User user = userRepository.findById(id).orElse(null);
-        model.addAttribute(user);
+        model.addAttribute("user", user);
 //        model.addAttribute("user", userRepository.findOne(id));
         return "/user/updateForm";
     }
