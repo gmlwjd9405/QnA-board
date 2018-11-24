@@ -66,20 +66,41 @@ public class UserController {
 
     @GetMapping("/{id}/form")
     public String updateForm(@PathVariable Long id, Model model, HttpSession session) {
-        Object sessionedUser = session.getAttribute("sessionedUser");
-        if (sessionedUser == null) { // 로그인되어 있지 않음
+        Object tempUser = session.getAttribute("sessionedUser");
+        if (tempUser == null) { // 로그인되어 있지 않음
             return "redirect:/users/loginForm";
         }
+        User sessionedUser = (User) tempUser;
+
+        /* [방법 1] */
+        if (!id.equals(sessionedUser.getId())) {
+            throw new IllegalStateException("You can't update the another user");
+        }
         User user = userRepository.findById(id).orElse(null);
+
+        /* [방법 2]: 간단, 로그인되어 세션에 저장된 사용자의 Id를 기반으로 DB에서 조회 */
+//        User user = userRepository.findById(sessionedUser.getId()).orElse(null);
+
         model.addAttribute("user", user);
 //        model.addAttribute("user", userRepository.findOne(id));
         return "/user/updateForm";
     }
 
     @PutMapping("/{id}")
-    public String update(@PathVariable Long id, User newUser) {
+    public String update(@PathVariable Long id, User updatedUser, HttpSession session) {
+        Object tempUser = session.getAttribute("sessionedUser");
+        if (tempUser == null) { // 로그인되어 있지 않음
+            return "redirect:/users/loginForm";
+        }
+        User sessionedUser = (User) tempUser;
+
+        /* [방법 1] */
+        if (!id.equals(sessionedUser.getId())) {
+            throw new IllegalStateException("You can't update the another user");
+        }
         User user = userRepository.findById(id).orElse(null);
-        user.update(newUser);
+
+        user.update(updatedUser);
         userRepository.save(user);
         return "redirect:/users";
     }
