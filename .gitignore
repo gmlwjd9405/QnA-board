@@ -5,12 +5,11 @@ pom.xml.versionsBackup
 pom.xml.next
 release.properties
 dependency-reduced-pom.xml
-buildNumber.properties
+buildNumber.propertga .ies
 .mvn/timing.properties
 /target/
-!.mvn/wrapper/maven-wrapper.jar
-/.mvn/
-/mvnw.bat
+# /.mvn/
+# /mvnw.batg
 # /mvnw
 # mvnw.cmd
 
@@ -50,7 +49,7 @@ bin/
 .mtj.tmp/
 
 # Package Files #
-*.jar
+# *.jar
 *.war
 *.nar
 *.ear
