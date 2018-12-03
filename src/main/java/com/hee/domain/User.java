@@ -1,5 +1,6 @@
 package com.hee.domain;
 
+import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ public class User {
     private Long id; // primary key, auto increased
 
     @Column(nullable = false, length = 20, unique = true)
+    @Getter
     private String userId;
     private String password;
     private String name;
