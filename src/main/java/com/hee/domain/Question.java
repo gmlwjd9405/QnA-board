@@ -1,12 +1,11 @@
 package com.hee.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 
 @Entity
 @NoArgsConstructor
@@ -23,6 +22,7 @@ public class Question {
 
     private String contents;
 
+    @CreationTimestamp
     private LocalDateTime createDate;
 
     public Question(User writer, String title, String contents) {
