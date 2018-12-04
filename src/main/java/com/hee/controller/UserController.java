@@ -1,7 +1,8 @@
-package com.hee.web;
+package com.hee.controller;
 
 import com.hee.domain.User;
-import com.hee.domain.UserRepository;
+import com.hee.repository.UserRepository;
+import com.hee.web.HttpSessionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
