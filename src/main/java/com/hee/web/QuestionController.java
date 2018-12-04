@@ -43,23 +43,51 @@ public class QuestionController {
     }
 
     @GetMapping("/{id}/form")
-    public String updateForm(@PathVariable Long id, Model model) {
-        model.addAttribute("question", questionRepository.findById(id).orElse(null));
+    public String updateForm(@PathVariable Long id, Model model, HttpSession session) {
+        if (!HttpSessionUtils.isLoginUSer(session)) {
+            return "/users/loginForm";
+        }
 
+        User loginUser = HttpSessionUtils.getUSerFormSession(session);
+        Question question = questionRepository.findById(id).orElse(null);
+        if (!question.isSameWriter(loginUser)) {
+            return "/users/loginForm";
+        }
+
+        model.addAttribute("question", question);
         return "/qna/updateForm";
     }
 
     @PutMapping("/{id}")
-    public String update(@PathVariable Long id, String title, String contents) {
+    public String update(@PathVariable Long id, String title, String contents, HttpSession session) {
+        if (!HttpSessionUtils.isLoginUSer(session)) {
+            return "/users/loginForm";
+        }
+
+        User loginUser = HttpSessionUtils.getUSerFormSession(session);
         Question question = questionRepository.findById(id).orElse(null);
+        if (!question.isSameWriter(loginUser)) {
+            return "/users/loginForm";
+        }
+
         question.update(title, contents);
         questionRepository.save(question);
 
-        return String.format("redirect:/questions/%d",id);
+        return String.format("redirect:/questions/%d", id);
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable Long id, HttpSession session) {
+        if (!HttpSessionUtils.isLoginUSer(session)) {
+            return "/users/loginForm";
+        }
+
+        User loginUser = HttpSessionUtils.getUSerFormSession(session);
+        Question question = questionRepository.findById(id).orElse(null);
+        if (!question.isSameWriter(loginUser)) {
+            return "/users/loginForm";
+        }
+
         questionRepository.deleteById(id);
 
         return "redirect:/";

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 @Entity
 @NoArgsConstructor
@@ -41,5 +42,9 @@ public class Question {
     public void update(String title, String contents) {
         this.title = title;
         this.contents = contents;
+    }
+
+    public boolean isSameWriter(User loginUser) {
+        return this.writer.equals(loginUser);
     }
 }
