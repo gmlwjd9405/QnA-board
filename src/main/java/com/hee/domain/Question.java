@@ -1,5 +1,6 @@
 package com.hee.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -13,19 +14,23 @@ import java.util.List;
 public class Question {
     @Id
     @GeneratedValue
+    @JsonProperty
     private Long id;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_question_writer"))
+    @JsonProperty
     private User writer;
 
     @OneToMany(mappedBy = "question")
     @OrderBy("id ASC")
     private List<Answer> answers;
 
+    @JsonProperty
     private String title;
 
     @Lob
+    @JsonProperty
     private String contents;
 
     @CreationTimestamp

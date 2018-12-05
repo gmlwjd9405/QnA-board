@@ -1,5 +1,7 @@
 package com.hee.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,16 +13,21 @@ import java.util.Objects;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty
     private Long id; // primary key, auto increased
 
     @Column(nullable = false, length = 20, unique = true)
     @Getter
+    @JsonProperty
     private String userId;
 
+    @JsonIgnore
     private String password;
 
+    @JsonProperty
     private String name;
 
+    @JsonProperty
     private String email;
 
     public boolean matchId(Long newId) {
