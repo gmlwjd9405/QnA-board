@@ -21,7 +21,7 @@ GET | / | return index.html view (show questions list)
 
 Method | URI | Description
 ---- | ---- | ----
-~~GET~~ | ~~/loginForm~~ | ~~return user/login.html view~~
+GET| loginForm | return user/login.html view
 POST | /login | login user 
 GET | /logout | logout user
 GET | /form | return user/form.html view
@@ -43,7 +43,7 @@ PUT | /{id} | update question
 DELETE | /{id} | delete question
 
 - **답변하기**
-    - Base URI: /questions/{{questionID}}/answers
+    - Base URI: /api/questions/{{questionID}}/answers
 
 Method | URI | Description
 ---- | ---- | ----  
