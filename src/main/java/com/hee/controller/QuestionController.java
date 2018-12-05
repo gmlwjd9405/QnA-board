@@ -1,6 +1,7 @@
 package com.hee.controller;
 
 import com.hee.domain.Question;
+import com.hee.domain.Result;
 import com.hee.domain.User;
 import com.hee.repository.QuestionRepository;
 import com.hee.web.HttpSessionUtils;
@@ -21,14 +22,14 @@ public class QuestionController {
     @GetMapping("/form")
     public String form(HttpSession session) {
         if (!HttpSessionUtils.isLoginUSer(session))
-            return "/users/loginForm";
+            return "/user/login";
         return "/qna/form";
     }
 
     @PostMapping("")
     public String create(String title, String contents, HttpSession session) {
         if (!HttpSessionUtils.isLoginUSer(session))
-            return "/users/loginForm";
+            return "/user/login";
         User sessionUser = HttpSessionUtils.getUSerFormSession(session);
 
         Question newQuestion = new Question(sessionUser, title, contents);
@@ -41,6 +42,17 @@ public class QuestionController {
         model.addAttribute("question", questionRepository.findById(id).orElse(null));
 
         return "/qna/show";
+    }
+
+    private Result valid(HttpSession session, Question question) {
+        if (!HttpSessionUtils.isLoginUSer(session)) {
+            return Result.fail("로그인이 필요합니다.");
+        }
+        User loginUser = HttpSessionUtils.getUSerFormSession(session);
+        if (!question.isSameWriter(loginUser)) {
+            return Result.fail("자신이 쓴 글만 수정, 삭제가 가능합니다.");
+        }
+        return Result.ok();
     }
 
     private boolean hasPermission(HttpSession session, Question question) {
@@ -56,44 +68,38 @@ public class QuestionController {
 
     @GetMapping("/{id}/form")
     public String updateForm(@PathVariable Long id, Model model, HttpSession session) {
-        try {
-            Question question = questionRepository.findById(id).orElse(null);
-            hasPermission(session, question);
-
-            model.addAttribute("question", question);
-            return "/qna/updateForm";
-        } catch (IllegalStateException e) {
-            model.addAttribute("errorMessage", e.getMessage());
+        Question question = questionRepository.findById(id).orElse(null);
+        Result result = valid(session, question);
+        if (!result.isValid()) {
+            model.addAttribute("errorMessage", result.getErrorMessage());
             return "/user/login";
         }
+        model.addAttribute("question", question);
+        return "/qna/updateForm";
     }
 
     @PutMapping("/{id}")
     public String update(@PathVariable Long id, String title, String contents, Model model, HttpSession session) {
-        try {
-            Question question = questionRepository.findById(id).orElse(null);
-            hasPermission(session, question);
-
-            question.update(title, contents);
-            questionRepository.save(question);
-            return String.format("redirect:/questions/%d", id);
-        } catch (IllegalStateException e) {
-            model.addAttribute("errorMessage", e.getMessage());
+        Question question = questionRepository.findById(id).orElse(null);
+        Result result = valid(session, question);
+        if (!result.isValid()) {
+            model.addAttribute("errorMessage", result.getErrorMessage());
             return "/user/login";
         }
+        question.update(title, contents);
+        questionRepository.save(question);
+        return String.format("redirect:/questions/%d", id);
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable Long id, Model model, HttpSession session) {
-        try {
-            Question question = questionRepository.findById(id).orElse(null);
-            hasPermission(session, question);
-
-            questionRepository.deleteById(id);
-            return "redirect:/";
-        } catch (IllegalStateException e) {
-            model.addAttribute("errorMessage", e.getMessage());
+        Question question = questionRepository.findById(id).orElse(null);
+        Result result = valid(session, question);
+        if (!result.isValid()) {
+            model.addAttribute("errorMessage", result.getErrorMessage());
             return "/user/login";
         }
+        questionRepository.deleteById(id);
+        return "redirect:/";
     }
 }

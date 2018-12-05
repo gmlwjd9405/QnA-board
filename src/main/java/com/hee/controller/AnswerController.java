@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("questions/{questionId}/answers")
+@RequestMapping("/questions/{questionId}/answers")
 public class AnswerController {
 
     @Autowired
@@ -27,7 +27,7 @@ public class AnswerController {
     @PostMapping("")
     public String create(@PathVariable Long questionId, String contents, HttpSession session) {
         if (!HttpSessionUtils.isLoginUSer(session)) {
-            return "/users/loginForm";
+            return "/user/login";
         }
         User loginUser = HttpSessionUtils.getUSerFormSession(session);
         Question question = questionRepository.findById(questionId).orElse(null);

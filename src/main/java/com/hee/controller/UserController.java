@@ -17,10 +17,10 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-//    @GetMapping("/loginForm")
-//    public String loginForm() {
-//        return "user/login";
-//    }
+    @GetMapping("/loginForm")
+    public String loginForm() {
+        return "user/login";
+    }
 
     @PostMapping("/login")
     public String login(String userId, String password, HttpSession session) {
