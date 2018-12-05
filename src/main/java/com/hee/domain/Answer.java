@@ -70,4 +70,8 @@ public class Answer {
         }
         return createDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
     }
+
+    public boolean isSameWriter(User loginUser) {
+        return loginUser.equals(writer);
+    }
 }

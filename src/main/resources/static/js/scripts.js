@@ -13,7 +13,7 @@ function addAnswer(e) {
 
     // 서버에 데이터 전송
     $.ajax({
-        type: "post",
+        type: 'post',
         url: url,
         data: queryString,
         dataType: 'json',
@@ -28,14 +28,45 @@ function onError() {
 
 function onSuccess(data, status) {
     console.log(data);
-    var answerTemplate = $("#answerTemplate").html();
     // show.html의 id = answerTemplate에 데이터를 동적으로 차례대로 넣기
-    var template = answerTemplate.format(data.writer.userId, data.formattedCreateDate, data.contents,  data.id, data.id);
+    var answerTemplate = $("#answerTemplate").html();
+    var template = answerTemplate.format(data.writer.userId, data.formattedCreateDate, data.contents, data.question.id, data.id);
+
     // 해당 클래스 아래에 template 추가
     $(".qna-comment-slipp-articles").prepend(template);
 
     // jquery reset input
     $("textarea[name=contents]").val("");
+}
+
+$("a.link-delete-article").click(deleteAnswer);
+
+function deleteAnswer(e) {
+    // 삭제 클릭시 이동하지 않도록 설정
+    e.preventDefault();
+
+    // 선택한 댓글의 url 정보를 가져옴
+    var deleteBtn = $(this); // this 변수 유지
+    var url = deleteBtn.attr("href");
+    console.log("url: " + url);
+
+    // 서버에 데이터 전송
+    $.ajax({
+        type: 'delete',
+        url: url,
+        dataType: 'json',
+        error: function (xhr, status) {
+            console.log("error");
+        },
+        success: function (data, status) {
+            console.log(data);
+            if (data.valid) {
+                deleteBtn.closest("article").remove();
+            } else {
+                alert(data.errorMessage);
+            }
+        }
+    });
 }
 
 String.prototype.format = function () {
