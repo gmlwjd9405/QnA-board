@@ -1,41 +1,43 @@
 package com.hee.domain;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
 
 @Entity
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // primary key, auto increased
+@Setter
+public class User extends AbstractEntity {
 
     @Column(nullable = false, length = 20, unique = true)
+    @Getter
+    @JsonProperty
     private String userId;
+
+    @JsonIgnore
     private String password;
+
+    @JsonProperty
     private String name;
+
+    @JsonProperty
     private String email;
 
-    public Long getId() {
-        return id;
+    public boolean matchId(Long newId) {
+        if (newId == null) {
+            return false;
+        }
+        return newId.equals(getId());
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public boolean matchPassword(String newPassword) {
+        if (newPassword == null) {
+            return false;
+        }
+        return newPassword.equals(password);
     }
 
     public void update(User newUser) {
@@ -47,7 +49,8 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "userId='" + userId + '\'' +
+                super.toString() +
+                ", userId='" + userId + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
