@@ -24,7 +24,7 @@ public class ApiAnswerController {
 
     @PostMapping("")
     public Answer create(@PathVariable Long questionId, String contents, HttpSession session) {
-        if (!HttpSessionUtils.isLoginUSer(session)) {
+        if (!HttpSessionUtils.isLoginUser(session)) {
             return null;
         }
         User loginUser = HttpSessionUtils.getUSerFormSession(session);
@@ -37,12 +37,12 @@ public class ApiAnswerController {
 
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long questionId, @PathVariable Long id, HttpSession session) {
-        if(!HttpSessionUtils.isLoginUSer(session)) {
+        if (!HttpSessionUtils.isLoginUser(session)) {
             return Result.fail("로그인이 필요합니다.");
         }
         Answer answer = answerRepository.findById(id).orElse(null);
         User loginUser = HttpSessionUtils.getUSerFormSession(session);
-        if(!answer.isSameWriter(loginUser)) {
+        if (!answer.isSameWriter(loginUser)) {
             return Result.fail("자신이 쓴 글만 수정, 삭제가 가능합니다.");
         }
         answerRepository.deleteById(id);

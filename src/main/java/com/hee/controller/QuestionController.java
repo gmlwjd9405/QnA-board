@@ -21,14 +21,14 @@ public class QuestionController {
 
     @GetMapping("/form")
     public String form(HttpSession session) {
-        if (!HttpSessionUtils.isLoginUSer(session))
+        if (!HttpSessionUtils.isLoginUser(session))
             return "/user/login";
         return "/qna/form";
     }
 
     @PostMapping("")
     public String create(String title, String contents, HttpSession session) {
-        if (!HttpSessionUtils.isLoginUSer(session))
+        if (!HttpSessionUtils.isLoginUser(session))
             return "/user/login";
         User sessionUser = HttpSessionUtils.getUSerFormSession(session);
 
@@ -45,7 +45,7 @@ public class QuestionController {
     }
 
     private Result valid(HttpSession session, Question question) {
-        if (!HttpSessionUtils.isLoginUSer(session)) {
+        if (!HttpSessionUtils.isLoginUser(session)) {
             return Result.fail("로그인이 필요합니다.");
         }
         User loginUser = HttpSessionUtils.getUSerFormSession(session);
@@ -56,7 +56,7 @@ public class QuestionController {
     }
 
     private boolean hasPermission(HttpSession session, Question question) {
-        if (!HttpSessionUtils.isLoginUSer(session)) {
+        if (!HttpSessionUtils.isLoginUser(session)) {
             throw new IllegalStateException("로그인이 필요합니다.");
         }
         User loginUser = HttpSessionUtils.getUSerFormSession(session);

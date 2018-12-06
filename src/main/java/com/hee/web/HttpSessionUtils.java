@@ -7,7 +7,7 @@ import javax.servlet.http.HttpSession;
 public class HttpSessionUtils {
     public static final String USER_SESSION_KEY = "sessionedUser";
 
-    public static boolean isLoginUSer(HttpSession session) {
+    public static boolean isLoginUser(HttpSession session) {
         Object sessionedUSer = session.getAttribute(USER_SESSION_KEY);
         if (sessionedUSer == null) {
             return false;
@@ -16,7 +16,7 @@ public class HttpSessionUtils {
     }
 
     public static User getUSerFormSession(HttpSession session) {
-        if (!isLoginUSer(session)) {
+        if (!isLoginUser(session)) {
             return null;
         }
         return (User) session.getAttribute(USER_SESSION_KEY);

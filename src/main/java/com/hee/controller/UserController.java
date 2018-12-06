@@ -69,7 +69,7 @@ public class UserController {
 
     @GetMapping("/{id}/form")
     public String updateForm(@PathVariable Long id, Model model, HttpSession session) {
-        if (HttpSessionUtils.isLoginUSer(session)) { // 로그인되어 있지 않음
+        if (!HttpSessionUtils.isLoginUser(session)) { // 로그인되어 있지 않음
             return "redirect:/users/loginForm";
         }
         User sessionedUser = HttpSessionUtils.getUSerFormSession(session);
@@ -90,7 +90,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     public String update(@PathVariable Long id, User updatedUser, HttpSession session) {
-        if (HttpSessionUtils.isLoginUSer(session)) { // 로그인되어 있지 않음
+        if (!HttpSessionUtils.isLoginUser(session)) { // 로그인되어 있지 않음
             return "redirect:/users/loginForm";
         }
         User sessionedUser = HttpSessionUtils.getUSerFormSession(session);
