@@ -48,6 +48,7 @@ DELETE | /{id} | delete question
 Method | URI | Description
 ---- | ---- | ----  
 POST | | create answer
+DELETE | /{id} | delete answer
  
 ---
 
